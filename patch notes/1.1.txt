@@ -1,0 +1,8 @@
+- Hot Fix: Player 1(Host) always get 2 Cat units no matter what team he selected.
+- Added messages to help players know what is going on.
+- Messages styled to green to help identify it is from the map.
+- Looking into:
+ - Friendly-fire allow/deny. If allow, is there punishment?
+ - Mostly unit balancing, that includes unit removal or insertion.
+ - Should the Cow King joke exist in the Mouse units?
+ - Cat income is a very important issue, need more games to find out.

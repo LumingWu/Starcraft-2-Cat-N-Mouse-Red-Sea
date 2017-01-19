@@ -1,0 +1,18 @@
+- Fix:
+ - Overlord speed passive is not active.
+- Balance:
+ - Overlord now need to research for transport, cost 250 mineral.
+ - Reduce Cat starting mineral to 0(from 50). 
+ - Reduce Mouse kill resource to 50(from 150).
+ - Reduce Nexus mineral gain to 25(from 50).
+ - Added Baneling cost to 125(from 100), so the upgrade cost is increased to 50(from 25).
+- Added messages to help players know who is dead and who is rescued.
+- Added prisoner to identify dead mice.
+- Added Github page for new players.!
+- Quality of life:
+ - Now Mouse spawn will move player's screen to the spawn location.
+- Looking into:
+ - Friendly-fire allow/deny. If allow, is there punishment?
+ - Mostly unit balancing, that includes unit removal or insertion.
+ - Should the Cow King joke exist in the Mouse units?
+ - Cat income is a very important issue, need more games to find out.
