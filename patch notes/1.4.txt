@@ -1,5 +1,4 @@
-- Hot Fix:
- - Prisoner is uncommandable, but pushable by units. Now it is paused.
+- Changing the loading screen to display the new information website.
 - Looking into:
  - Friendly-fire allow/deny. If allow, is there punishment?
  - Mostly unit balancing, that includes unit removal or insertion.
