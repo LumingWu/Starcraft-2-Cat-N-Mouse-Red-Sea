@@ -6,7 +6,7 @@
 
 - Who Am I?
 
-   I am a senior and a rising graduate student major in Computer Science. I still play some games in my free time, but I spend most of time in learning new stuffs and working personal programming projects. Therefore, this map makes my two worlds happy.
+   I am a graduate student that majors in Computer Science. I still play some games in my free time, but I spend most of my time in learning new stuffs and working on personal programming projects. Therefore, this map makes my two worlds happy, but not forever.
 
 - Welcome
 
@@ -26,10 +26,10 @@
     - The game is half game, 1 Cat vs 3 Mice, meaning 2 to 4 players.
     - Players may volunteer to be Cat.
     - If the desired Cat number will not be satisfied, the choosing players can only choose Cat.
-    - If by the end of the selection, there are more players than the empty Cat seat, these seat will be filled randomly.
+    - If by the end of the selection, there are more players than the empty Cat seats, these seat will be filled randomly.
 
   - Basic tip:
-    - Cat should have vision on the map, try to kill the Mice that are easy target.
+    - Cat should have vision on the map, try to kill the Mice that are easy targets.
     - If winning early game is not possible. Try to survive until late game, you are more powerful by then.
 		
     - Mouse should build walls to buy time to prepare(kill Mouse Nest) escape.
@@ -39,5 +39,5 @@
     - Take advantage of the new Starcraft 2 pathing algorithm, Cat will get confused if you block roads.
 
   - Special feature:
-    - If you play the map as a single player, you will enter developer test mode. You will be able to control 2 Mice and 2 Cats. Each of them have enough(a lot) mineral for you to test units.
+    - If you play the map as a single player, you will enter developer test mode. You will be able to control 3 Mice and 3 Cats. Each of them have enough(a lot) mineral for you to test units.
 
