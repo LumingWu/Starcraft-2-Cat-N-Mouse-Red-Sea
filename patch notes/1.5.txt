@@ -1,0 +1,24 @@
+- Cow King joke is officially permanent.
+- Nova decoy bug fix.
+- Overlord movement speed bug fix.
+- Changed purchase menu to the Shop at the top.
+- Show mouse hole and teleporter in mini-map even without vision.
+- Added hero Special Force, the 420 marine.
+- Changed the Flying Spaghetti Monster's abilities to look more like a boss.
+- Added dependency of Nova mission pack.
+- Modified player leave after start trigger to let unit death trigger handle it.
+- Fixed the camera trigger that seems to follow the unit. I honestly did not know in past tests.
+- Added preview pictures so the default pixelated image is gone.
+- Added spawn sound for player and camera movement for cat spawn.
+- Added death sound for cat and mouse player.
+- Added release cat sound.
+- Chess Wall now has charges to avoid stacking free walls.
+- Added splash damage for cat equal to the primary damage.
+- Added voting system.
+- Added command -help,
+- Looking into:
+ - Friendly-fire allow/deny. If allow, is there punishment?
+ - Mostly unit balancing, that includes unit removal or insertion.
+ - Cat income is a very important issue, need more games to find out.
+ 
+Officially released to the public as Cat 'N Mouse Red Sea 1.0.
