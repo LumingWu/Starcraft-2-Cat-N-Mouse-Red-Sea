@@ -1,0 +1,1766 @@
+//==================================================================================================
+// 
+// Generated Map Script
+// 
+// Name:   Cat 'N Mouse Fire Sea
+// 
+//==================================================================================================
+include "TriggerLibs/NativeLib"
+
+//--------------------------------------------------------------------------------------------------
+// Library Initialization
+//--------------------------------------------------------------------------------------------------
+void InitLibs () {
+    libNtve_InitLib();
+}
+
+//--------------------------------------------------------------------------------------------------
+// Global Variables
+//--------------------------------------------------------------------------------------------------
+int[12] gv_PlayerStatus;
+int gv_CatNumber;
+int gv_MouseNumber;
+int gv_GameTime;
+int gv_IncomeTime;
+int gv_Income;
+playergroup gv_CatGroup;
+playergroup gv_MiceGroup;
+unitgroup gv_catUnitGroup;
+unitgroup gv_mouseUnitGroup;
+unitgroup gv_CivilianGroup;
+bool gv_votelock;
+int[12] gv_votes;
+
+void InitGlobals () {
+    gv_Income = 2;
+    gv_CatGroup = PlayerGroupEmpty();
+    gv_MiceGroup = PlayerGroupEmpty();
+    gv_catUnitGroup = UnitGroupEmpty();
+    gv_mouseUnitGroup = UnitGroupEmpty();
+    gv_CivilianGroup = UnitGroupEmpty();
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger Variables
+//--------------------------------------------------------------------------------------------------
+trigger gt_MapInitialization;
+trigger gt_PlayerChooseMouse;
+trigger gt_PlayerChooseCat;
+trigger gt_SelectionTimer;
+trigger gt_ReleaseCats;
+trigger gt_SelectionChecking;
+trigger gt_UnitKilled;
+trigger gt_RescueMouse;
+trigger gt_MouseBuilt;
+trigger gt_CatBuilt;
+trigger gt_CatIncome;
+trigger gt_InGameChecking;
+trigger gt_WestToEast;
+trigger gt_EastToWest;
+trigger gt_NorthToSouth;
+trigger gt_SouthToNorth;
+trigger gt_ShopClicked;
+trigger gt_Shop1Train;
+trigger gt_Shop2Train;
+trigger gt_Shop3Train;
+trigger gt_Shop4Train;
+trigger gt_Shop5Train;
+trigger gt_Shop6Train;
+trigger gt_Shop7Train;
+trigger gt_Shop8Train;
+trigger gt_help;
+trigger gt_players;
+trigger gt_player;
+trigger gt_kick;
+trigger gt_yes;
+trigger gt_no;
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Initialization
+//--------------------------------------------------------------------------------------------------
+bool gt_MapInitialization_Func (bool testConds, bool runActions) {
+    playergroup auto00989FB5_g;
+    int auto00989FB5_p;
+
+    // Variable Declarations
+    int lv_Player;
+
+    // Variable Initialization
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if (((PlayerGroupCount(PlayerGroupActive()) >= 2) && (PlayerGroupCount(PlayerGroupActive()) <= 4))) {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/E0B035BC"));
+        gv_CatNumber = 1;
+    }
+    else if (((PlayerGroupCount(PlayerGroupActive()) >= 5) && (PlayerGroupCount(PlayerGroupActive()) <= 8))) {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/DB9C43A7"));
+        gv_CatNumber = 2;
+    }
+
+    if ((gv_CatNumber == 0)) {
+        VisRevealArea(1, RegionFromId(1), 0.0, false);
+        VisRevealArea(1, RegionFromId(2), 0.0, false);
+        PlayerSetRace(1, "Terr");
+        PlayerModifyPropertyInt(1, c_playerPropSuppliesLimit, c_playerPropOperSetTo, 1000);
+        PlayerModifyPropertyInt(1, c_playerPropSuppliesMade, c_playerPropOperSetTo, 1000);
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/6A0F6FF3"));
+        PlayerModifyPropertyInt(1, c_playerPropMinerals, c_playerPropOperAdd, 999999);
+
+        UnitKill(UnitFromId(96));
+        UnitKill(UnitFromId(95));
+        UnitKill(UnitFromId(2));
+        UnitKill(UnitFromId(3));
+
+        UnitKill(UnitFromId(699052006));
+        UnitKill(UnitFromId(222));
+
+        PlayerGroupAdd(gv_MiceGroup, 2);
+        gv_PlayerStatus[2] = 1;
+        UnitCreate(1, "Probe", 0, 2, PointFromId(14), 270.0);
+        PlayerGroupAdd(gv_MiceGroup, 4);
+        gv_PlayerStatus[4] = 1;
+        UnitCreate(1, "Probe", 0, 4, PointFromId(14), 270.0);
+        PlayerGroupAdd(gv_CatGroup, 3);
+        gv_PlayerStatus[3] = 1;
+        UnitCreate(1, "PrimalUltralisk", 0, 3, PointFromId(14), 270.0);
+        PlayerGroupAdd(gv_CatGroup, 5);
+        gv_PlayerStatus[5] = 1;
+        UnitCreate(1, "PrimalUltralisk", 0, 5, PointFromId(14), 270.0);
+        gv_CatNumber = 2;
+        gv_MouseNumber = 2;
+        UnitCreate(1, "PrimalUltralisk", 0, 1, PointFromId(14), 270.0);
+        UnitCreate(1, "Probe", 0, 1, PointFromId(14), 270.0);
+        PlayerSetAlliance(0, c_allianceIdControl, 1, true);
+        libNtve_gf_SetAlliance(1, 2, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(1, 3, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(1, 4, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(1, 5, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(2, 3, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(2, 4, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(2, 5, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(3, 4, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(3, 5, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+        libNtve_gf_SetAlliance(4, 5, libNtve_ge_AllianceSetting_AllyWithSharedVisionControlAndSpending);
+
+        TriggerEnable(gt_SelectionTimer, false);
+        TriggerEnable(gt_PlayerChooseCat, false);
+        TriggerEnable(gt_PlayerChooseMouse, false);
+        TriggerEnable(gt_ReleaseCats, false);
+        TriggerEnable(gt_MouseBuilt, true);
+        TriggerEnable(gt_UnitKilled, true);
+        TriggerEnable(gt_CatIncome, true);
+        TriggerEnable(gt_RescueMouse, true);
+        TriggerEnable(gt_SelectionChecking, false);
+
+    }
+    else {
+        libNtve_gf_MakeUnitInvulnerable(UnitFromId(96), true);
+        libNtve_gf_MakeUnitInvulnerable(UnitFromId(95), true);
+        libNtve_gf_MakeUnitInvulnerable(UnitFromId(2), true);
+        libNtve_gf_MakeUnitInvulnerable(UnitFromId(3), true);
+        libNtve_gf_MakeUnitInvulnerable(UnitFromId(699052006), true);
+        libNtve_gf_MakeUnitInvulnerable(UnitFromId(222), true);
+
+        libNtve_gf_MakeUnitUncommandable(UnitFromId(699052006), true);
+        libNtve_gf_MakeUnitUncommandable(UnitFromId(222), true);
+
+        auto00989FB5_g = PlayerGroupActive(); 
+        auto00989FB5_p = 1;
+        for ( ; auto00989FB5_p <= PlayerGroupCount(auto00989FB5_g) ; auto00989FB5_p += BoolToInt(lv_Player == PlayerGroupPlayer(auto00989FB5_g, auto00989FB5_p)) ) {
+            lv_Player = PlayerGroupPlayer(auto00989FB5_g, auto00989FB5_p);
+            libNtve_gf_CreateUnitsAtPoint2(1, "Civilian", 0, lv_Player, PointFromId(14));
+            libNtve_gf_MakeUnitInvulnerable(UnitLastCreated(), true);
+            UnitGroupAdd(gv_CivilianGroup, UnitLastCreated());
+            PlayerSetAlliance(0, c_allianceIdControl, lv_Player, true);
+            VisRevealArea(lv_Player, RegionFromId(1), 0.0, false);
+            VisRevealArea(lv_Player, RegionFromId(2), 0.0, false);
+        }
+
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/283D02CF"));
+
+    }
+    PlayerModifyPropertyInt(0, c_playerPropSuppliesLimit, c_playerPropOperSetTo, 42);
+    PlayerModifyPropertyInt(0, c_playerPropSuppliesMade, c_playerPropOperSetTo, 42);
+    UnitAbilityEnable(UnitFromId(1690155136), "MouseBasicUnits", false);
+    UnitAbilityEnable(UnitFromId(1690155136), "MouseAdvanceUnits", false);
+    UnitAbilityEnable(UnitFromId(1690155136), "CatBasicUnits", false);
+    UnitAbilityEnable(UnitFromId(1690155136), "CatAdvanceUnits", false);
+    UnitAbilityEnable(UnitFromId(1690155136), "evolutionchamberresearch", false);
+    UnitAbilityEnable(UnitFromId(1690155136), "LairResearch", false);
+    UnitAbilityEnable(UnitFromId(1690155136), "SpireResearch", false);
+
+    UISetResourceTradeCountdownTime(0);
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_MapInitialization_Init () {
+    gt_MapInitialization = TriggerCreate("gt_MapInitialization_Func");
+    TriggerAddEventMapInit(gt_MapInitialization);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: PlayerChooseMouse
+//--------------------------------------------------------------------------------------------------
+bool gt_PlayerChooseMouse_Func (bool testConds, bool runActions) {
+    // Conditions
+    if (testConds) {
+        if (!(((UnitGetType(EventUnit()) == "Civilian") && ((PlayerGroupCount(gv_CatGroup) + UnitGroupCount(gv_CivilianGroup, c_unitCountAlive)) > gv_CatNumber)))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/4685F1F7") + StringExternal("Param/Value/00210077") + PlayerName(UnitGetOwner(EventUnit())) + StringExternal("Param/Value/00C7139B") + StringExternal("Param/Value/60F72AAF")));
+    PlayerGroupAdd(gv_MiceGroup, UnitGetOwner(EventUnit()));
+    PlayerSetRace(UnitGetOwner(EventUnit()), "Prot");
+    gv_PlayerStatus[UnitGetOwner(EventUnit())] = 1;
+    UnitKill(EventUnit());
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_PlayerChooseMouse_Init () {
+    gt_PlayerChooseMouse = TriggerCreate("gt_PlayerChooseMouse_Func");
+    TriggerAddEventUnitRange(gt_PlayerChooseMouse, null, UnitFromId(222), 2.0, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: PlayerChooseCat
+//--------------------------------------------------------------------------------------------------
+bool gt_PlayerChooseCat_Func (bool testConds, bool runActions) {
+    // Conditions
+    if (testConds) {
+        if (!(((UnitGetType(EventUnit()) == "Civilian") && (PlayerGroupCount(gv_CatGroup) < gv_CatNumber)))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/DA41FA98") + StringExternal("Param/Value/8213820D") + PlayerName(UnitGetOwner(EventUnit())) + StringExternal("Param/Value/852C22B4") + StringExternal("Param/Value/4CE90178")));
+    PlayerGroupAdd(gv_CatGroup, UnitGetOwner(EventUnit()));
+    PlayerSetRace(UnitGetOwner(EventUnit()), "Zerg");
+    gv_PlayerStatus[UnitGetOwner(EventUnit())] = 1;
+    UnitKill(EventUnit());
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_PlayerChooseCat_Init () {
+    gt_PlayerChooseCat = TriggerCreate("gt_PlayerChooseCat_Func");
+    TriggerAddEventUnitRange(gt_PlayerChooseCat, null, UnitFromId(699052006), 2.0, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: SelectionTimer
+//--------------------------------------------------------------------------------------------------
+bool gt_SelectionTimer_Func (bool testConds, bool runActions) {
+    unitgroup auto82D28A90_g;
+    int auto82D28A90_u;
+    playergroup autoB3A24EC6_g;
+    int autoB3A24EC6_p;
+    playergroup auto0DFB7073_g;
+    int auto0DFB7073_p;
+    playergroup autoC2809EA9_g;
+    int autoC2809EA9_p;
+    playergroup auto0A00E88A_g;
+    int auto0A00E88A_p;
+    playergroup auto40545E18_g;
+    int auto40545E18_p;
+    playergroup autoD0A2DBBC_g;
+    int autoD0A2DBBC_p;
+    int auto85834BD0_val;
+    playergroup auto97715532_g;
+    int auto97715532_p;
+    int auto8AB44609_val;
+    int autoAC50CB8D_val;
+    playergroup auto13F15DF4_g;
+    int auto13F15DF4_p;
+
+    // Variable Declarations
+    unit lv_Unit;
+    int lv_Player;
+    int lv_TargetPlayer;
+
+    // Variable Initialization
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    TriggerEnable(gt_PlayerChooseCat, false);
+    TriggerEnable(gt_PlayerChooseMouse, false);
+
+    while ((PlayerGroupCount(gv_CatGroup) < gv_CatNumber)) {
+        lv_Unit = UnitGroupRandomUnit(gv_CivilianGroup, c_unitCountAlive);
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/521E813F") + StringExternal("Param/Value/167FFA02") + PlayerName(UnitGetOwner(lv_Unit)) + StringExternal("Param/Value/4ED9C611") + StringExternal("Param/Value/697F7B50")));
+        PlayerGroupAdd(gv_CatGroup, UnitGetOwner(lv_Unit));
+        PlayerSetRace(UnitGetOwner(lv_Unit), "Zerg");
+        gv_PlayerStatus[UnitGetOwner(lv_Unit)] = 1;
+        UnitKill(lv_Unit);
+    }
+
+    auto82D28A90_g = gv_CivilianGroup;
+    auto82D28A90_u = 1;
+    for ( ; auto82D28A90_u <= UnitGroupCount(auto82D28A90_g, c_unitCountAll) ; auto82D28A90_u += BoolToInt(lv_Unit == UnitGroupUnit(auto82D28A90_g, auto82D28A90_u)) ) {
+        lv_Unit = UnitGroupUnit(auto82D28A90_g, auto82D28A90_u);
+        if ((UnitIsAlive(lv_Unit) == true)) {
+            PlayerGroupAdd(gv_MiceGroup, UnitGetOwner(lv_Unit));
+            UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/763802F6") + StringExternal("Param/Value/DE6B6AC1") + PlayerName(UnitGetOwner(lv_Unit)) + StringExternal("Param/Value/EF9F2286") + StringExternal("Param/Value/038B50C9")));
+            PlayerSetRace(UnitGetOwner(lv_Unit), "Prot");
+            gv_PlayerStatus[UnitGetOwner(lv_Unit)] = 1;
+            UnitKill(lv_Unit);
+        }
+
+    }
+
+    UnitKill(UnitFromId(699052006));
+    UnitKill(UnitFromId(222));
+
+    autoB3A24EC6_g = gv_MiceGroup; 
+    autoB3A24EC6_p = 1;
+    for ( ; autoB3A24EC6_p <= PlayerGroupCount(autoB3A24EC6_g) ; autoB3A24EC6_p += BoolToInt(lv_Player == PlayerGroupPlayer(autoB3A24EC6_g, autoB3A24EC6_p)) ) {
+        lv_Player = PlayerGroupPlayer(autoB3A24EC6_g, autoB3A24EC6_p);
+        auto0DFB7073_g = gv_CatGroup; 
+        auto0DFB7073_p = 1;
+        for ( ; auto0DFB7073_p <= PlayerGroupCount(auto0DFB7073_g) ; auto0DFB7073_p += BoolToInt(lv_TargetPlayer == PlayerGroupPlayer(auto0DFB7073_g, auto0DFB7073_p)) ) {
+            lv_TargetPlayer = PlayerGroupPlayer(auto0DFB7073_g, auto0DFB7073_p);
+            libNtve_gf_SetAlliance(lv_Player, lv_TargetPlayer, libNtve_ge_AllianceSetting_Enemy);
+            PlayerSetAlliance(lv_Player, c_allianceIdChat, lv_TargetPlayer, false);
+            PlayerSetAlliance(lv_TargetPlayer, c_allianceIdChat, lv_Player, false);
+        }
+        autoC2809EA9_g = gv_MiceGroup; 
+        autoC2809EA9_p = 1;
+        for ( ; autoC2809EA9_p <= PlayerGroupCount(autoC2809EA9_g) ; autoC2809EA9_p += BoolToInt(lv_TargetPlayer == PlayerGroupPlayer(autoC2809EA9_g, autoC2809EA9_p)) ) {
+            lv_TargetPlayer = PlayerGroupPlayer(autoC2809EA9_g, autoC2809EA9_p);
+            libNtve_gf_SetAlliance(lv_Player, lv_TargetPlayer, libNtve_ge_AllianceSetting_AllyWithSharedVision);
+            PlayerSetAlliance(lv_Player, c_allianceIdChat, lv_TargetPlayer, true);
+        }
+    }
+    auto0A00E88A_g = gv_CatGroup; 
+    auto0A00E88A_p = 1;
+    for ( ; auto0A00E88A_p <= PlayerGroupCount(auto0A00E88A_g) ; auto0A00E88A_p += BoolToInt(lv_Player == PlayerGroupPlayer(auto0A00E88A_g, auto0A00E88A_p)) ) {
+        lv_Player = PlayerGroupPlayer(auto0A00E88A_g, auto0A00E88A_p);
+        auto40545E18_g = gv_CatGroup; 
+        auto40545E18_p = 1;
+        for ( ; auto40545E18_p <= PlayerGroupCount(auto40545E18_g) ; auto40545E18_p += BoolToInt(lv_TargetPlayer == PlayerGroupPlayer(auto40545E18_g, auto40545E18_p)) ) {
+            lv_TargetPlayer = PlayerGroupPlayer(auto40545E18_g, auto40545E18_p);
+            libNtve_gf_SetAlliance(lv_Player, lv_TargetPlayer, libNtve_ge_AllianceSetting_AllyWithSharedVision);
+            PlayerSetAlliance(lv_Player, c_allianceIdChat, lv_TargetPlayer, true);
+        }
+    }
+
+    autoD0A2DBBC_g = gv_CatGroup; 
+    autoD0A2DBBC_p = 1;
+    for ( ; autoD0A2DBBC_p <= PlayerGroupCount(autoD0A2DBBC_g) ; autoD0A2DBBC_p += BoolToInt(lv_Player == PlayerGroupPlayer(autoD0A2DBBC_g, autoD0A2DBBC_p)) ) {
+        lv_Player = PlayerGroupPlayer(autoD0A2DBBC_g, autoD0A2DBBC_p);
+        auto85834BD0_val = lv_Player;
+        if (auto85834BD0_val == 1) {
+            lv_Unit = UnitFromId(791521423);
+        }
+        else if (auto85834BD0_val == 2) {
+            lv_Unit = UnitFromId(316124513);
+        }
+        else if (auto85834BD0_val == 3) {
+            lv_Unit = UnitFromId(1476396956);
+        }
+        else if (auto85834BD0_val == 4) {
+            lv_Unit = UnitFromId(1128864413);
+        }
+        else if (auto85834BD0_val == 5) {
+            lv_Unit = UnitFromId(1444895892);
+        }
+        else if (auto85834BD0_val == 6) {
+            lv_Unit = UnitFromId(919097394);
+        }
+        else if (auto85834BD0_val == 7) {
+            lv_Unit = UnitFromId(623288384);
+        }
+        else if (auto85834BD0_val == 8) {
+            lv_Unit = UnitFromId(675722489);
+        }
+        else {
+        }
+        UnitAbilityEnable(lv_Unit, "MouseBasicUnits", false);
+        UnitAbilityEnable(lv_Unit, "MouseAdvanceUnits", false);
+
+        UnitCreate(1, "PrimalUltralisk", 0, lv_Player, PointFromId(14), 270.0);
+        CameraPan(lv_Player, UnitGetPosition(UnitLastCreated()), 0.0, -1, 10.0, true);
+        UnitGroupAdd(gv_catUnitGroup, UnitLastCreated());
+    }
+    SoundPlayForPlayer(SoundLink("Ultralisk_Yes", -1), c_maxPlayers, gv_CatGroup, 100.0, 0.0);
+
+    gv_MouseNumber = PlayerGroupCount(gv_MiceGroup);
+    lv_TargetPlayer = 1;
+    auto97715532_g = gv_MiceGroup; 
+    auto97715532_p = 1;
+    for ( ; auto97715532_p <= PlayerGroupCount(auto97715532_g) ; auto97715532_p += BoolToInt(lv_Player == PlayerGroupPlayer(auto97715532_g, auto97715532_p)) ) {
+        lv_Player = PlayerGroupPlayer(auto97715532_g, auto97715532_p);
+        auto8AB44609_val = lv_Player;
+        if (auto8AB44609_val == 1) {
+            lv_Unit = UnitFromId(791521423);
+        }
+        else if (auto8AB44609_val == 2) {
+            lv_Unit = UnitFromId(316124513);
+        }
+        else if (auto8AB44609_val == 3) {
+            lv_Unit = UnitFromId(1476396956);
+        }
+        else if (auto8AB44609_val == 4) {
+            lv_Unit = UnitFromId(1128864413);
+        }
+        else if (auto8AB44609_val == 5) {
+            lv_Unit = UnitFromId(1444895892);
+        }
+        else if (auto8AB44609_val == 6) {
+            lv_Unit = UnitFromId(919097394);
+        }
+        else if (auto8AB44609_val == 7) {
+            lv_Unit = UnitFromId(623288384);
+        }
+        else if (auto8AB44609_val == 8) {
+            lv_Unit = UnitFromId(675722489);
+        }
+        else {
+        }
+        UnitAbilityEnable(lv_Unit, "CatBasicUnits", false);
+        UnitAbilityEnable(lv_Unit, "CatAdvanceUnits", false);
+        UnitAbilityEnable(lv_Unit, "evolutionchamberresearch", false);
+        UnitAbilityEnable(lv_Unit, "LairResearch", false);
+        UnitAbilityEnable(lv_Unit, "SpireResearch", false);
+
+        autoAC50CB8D_val = lv_TargetPlayer;
+        if (autoAC50CB8D_val == 1) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(36960959), 270.0);
+        }
+        else if (autoAC50CB8D_val == 2) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(269031559), 270.0);
+        }
+        else if (autoAC50CB8D_val == 3) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(1718592165), 270.0);
+        }
+        else if (autoAC50CB8D_val == 4) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(1843341427), 270.0);
+        }
+        else if (autoAC50CB8D_val == 5) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(2065460992), 270.0);
+        }
+        else if (autoAC50CB8D_val == 6) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(196582456), 270.0);
+        }
+        else if (autoAC50CB8D_val == 7) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(808444617), 270.0);
+        }
+        else if (autoAC50CB8D_val == 8) {
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(935395526), 270.0);
+        }
+        else {
+        }
+        CameraPan(lv_Player, UnitGetPosition(UnitLastCreated()), 0.0, -1, 10.0, true);
+        UnitGroupAdd(gv_mouseUnitGroup, UnitLastCreated());
+        PlayerModifyPropertyInt(lv_Player, c_playerPropMinerals, c_playerPropOperAdd, 50);
+        lv_TargetPlayer += 1;
+    }
+    SoundPlayForPlayer(SoundLink("Probe_Yes", -1), c_maxPlayers, gv_MiceGroup, 100.0, 0.0);
+
+    TriggerEnable(gt_UnitKilled, true);
+    TriggerEnable(gt_RescueMouse, true);
+    TriggerEnable(gt_CatIncome, true);
+    TriggerEnable(gt_SelectionChecking, false);
+    TriggerEnable(gt_InGameChecking, true);
+
+    UIDisplayMessage(gv_CatGroup, c_messageAreaChat, StringExternal("Param/Value/302F78DE"));
+    UIDisplayMessage(gv_MiceGroup, c_messageAreaChat, StringExternal("Param/Value/DB68FBC6"));
+
+    if (((gv_CatNumber == 0) || (gv_MouseNumber == 0))) {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/23683028"));
+        auto13F15DF4_g = PlayerGroupActive(); 
+        auto13F15DF4_p = 1;
+        for ( ; auto13F15DF4_p <= PlayerGroupCount(auto13F15DF4_g) ; auto13F15DF4_p += BoolToInt(lv_Player == PlayerGroupPlayer(auto13F15DF4_g, auto13F15DF4_p)) ) {
+            lv_Player = PlayerGroupPlayer(auto13F15DF4_g, auto13F15DF4_p);
+            GameOver(lv_Player, c_gameOverTie, true, true);
+        }
+    }
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_SelectionTimer_Init () {
+    gt_SelectionTimer = TriggerCreate("gt_SelectionTimer_Func");
+    TriggerAddEventTimeElapsed(gt_SelectionTimer, 21.0, c_timeGame);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: ReleaseCat
+//--------------------------------------------------------------------------------------------------
+bool gt_ReleaseCats_Func (bool testConds, bool runActions) {
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/A856719D"));
+    SoundPlayForPlayer(SoundLink("Ghost_NukeExplode", -1), c_maxPlayers, PlayerGroupAll(), 100.0, 0.0);
+    UnitKill(UnitFromId(96));
+    UnitKill(UnitFromId(95));
+    UnitKill(UnitFromId(2));
+    UnitKill(UnitFromId(3));
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_ReleaseCats_Init () {
+    gt_ReleaseCats = TriggerCreate("gt_ReleaseCats_Func");
+    TriggerAddEventTimeElapsed(gt_ReleaseCats, 36.0, c_timeGame);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: PlayerLeftBeforeStart
+//--------------------------------------------------------------------------------------------------
+bool gt_SelectionChecking_Func (bool testConds, bool runActions) {
+    unitgroup autoB527C696_g;
+    int autoB527C696_u;
+    playergroup auto002140B2_g;
+    int auto002140B2_p;
+
+    // Variable Declarations
+    unit lv_Unit;
+    int lv_Player;
+
+    // Variable Initialization
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/B725F7B8") + StringExternal("Param/Value/221A34E5") + PlayerName(EventPlayer()) + StringExternal("Param/Value/A46CD6FF") + StringExternal("Param/Value/3F0726DE")));
+    if (((PlayerGroupCount(PlayerGroupActive()) >= 2) && (PlayerGroupCount(PlayerGroupActive()) <= 4))) {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/0D491709"));
+        gv_CatNumber = 1;
+    }
+    else if (((PlayerGroupCount(PlayerGroupActive()) >= 5) && (PlayerGroupCount(PlayerGroupActive()) <= 8))) {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/2F1D7A76"));
+        gv_CatNumber = 2;
+    }
+
+    autoB527C696_g = UnitGroup(null, EventPlayer(), RegionFromId(1), UnitFilter(0, 0, 0, 0), 0);
+    autoB527C696_u = 1;
+    for ( ; autoB527C696_u <= UnitGroupCount(autoB527C696_g, c_unitCountAll) ; autoB527C696_u += BoolToInt(lv_Unit == UnitGroupUnit(autoB527C696_g, autoB527C696_u)) ) {
+        lv_Unit = UnitGroupUnit(autoB527C696_g, autoB527C696_u);
+        UnitKill(lv_Unit);
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, EventPlayer()) == true)) {
+        PlayerGroupRemove(gv_CatGroup, EventPlayer());
+    }
+
+    if ((PlayerGroupHasPlayer(gv_MiceGroup, EventPlayer()) == true)) {
+        PlayerGroupRemove(gv_MiceGroup, EventPlayer());
+    }
+
+    if (((PlayerGroupCount(gv_CatGroup) + UnitGroupCount(gv_CivilianGroup, c_unitCountAlive)) < gv_CatNumber)) {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/8F75DDEF"));
+        auto002140B2_g = PlayerGroupActive(); 
+        auto002140B2_p = 1;
+        for ( ; auto002140B2_p <= PlayerGroupCount(auto002140B2_g) ; auto002140B2_p += BoolToInt(lv_Player == PlayerGroupPlayer(auto002140B2_g, auto002140B2_p)) ) {
+            lv_Player = PlayerGroupPlayer(auto002140B2_g, auto002140B2_p);
+            GameOver(lv_Player, c_gameOverTie, true, true);
+        }
+    }
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_SelectionChecking_Init () {
+    gt_SelectionChecking = TriggerCreate("gt_SelectionChecking_Func");
+    TriggerAddEventPlayerLeft(gt_SelectionChecking, c_playerAny, c_gameResultUndecided);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: UnitKill
+//--------------------------------------------------------------------------------------------------
+bool gt_UnitKilled_Func (bool testConds, bool runActions) {
+    string auto41F11478_val;
+    unitgroup auto53314B55_g;
+    int auto53314B55_u;
+    playergroup auto5F5D4917_g;
+    int auto5F5D4917_p;
+    playergroup auto0C395880_g;
+    int auto0C395880_p;
+    unitgroup auto8E0C2289_g;
+    int auto8E0C2289_u;
+    playergroup autoAFE175E3_g;
+    int autoAFE175E3_p;
+    playergroup autoA2BD9324_g;
+    int autoA2BD9324_p;
+
+    // Variable Declarations
+    unit lv_Unit;
+    int lv_PlayerIndex;
+
+    // Variable Initialization
+    lv_PlayerIndex = UnitGetOwner(EventUnit());
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    auto41F11478_val = UnitGetType(EventUnit());
+    if (auto41F11478_val == "PrimalUltralisk") {
+        gv_PlayerStatus[lv_PlayerIndex] -= 1;
+        gv_CatNumber -= 1;
+        UnitGroupRemove(gv_catUnitGroup, EventUnit());
+
+        if ((gv_PlayerStatus[lv_PlayerIndex] == 0)) {
+            UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/47E4966D") + PlayerName(lv_PlayerIndex) + StringExternal("Param/Value/CE178773") + PlayerName(libNtve_gf_KillingPlayer()) + StringExternal("Param/Value/E4EE641D")));
+            auto53314B55_g = UnitGroup(null, UnitGetOwner(EventUnit()), RegionEntireMap(), UnitFilter(0, 0, 0, 0), 0);
+            auto53314B55_u = 1;
+            for ( ; auto53314B55_u <= UnitGroupCount(auto53314B55_g, c_unitCountAll) ; auto53314B55_u += BoolToInt(lv_Unit == UnitGroupUnit(auto53314B55_g, auto53314B55_u)) ) {
+                lv_Unit = UnitGroupUnit(auto53314B55_g, auto53314B55_u);
+                UnitKill(lv_Unit);
+            }
+            SoundPlayForPlayer(SoundLink("Ultralisk_Pissed", -1), c_maxPlayers, PlayerGroupAll(), 100.0, 0.0);
+        }
+
+        if ((gv_CatNumber == 0)) {
+            auto5F5D4917_g = gv_CatGroup; 
+            auto5F5D4917_p = 1;
+            for ( ; auto5F5D4917_p <= PlayerGroupCount(auto5F5D4917_g) ; auto5F5D4917_p += BoolToInt(lv_PlayerIndex == PlayerGroupPlayer(auto5F5D4917_g, auto5F5D4917_p)) ) {
+                lv_PlayerIndex = PlayerGroupPlayer(auto5F5D4917_g, auto5F5D4917_p);
+                GameOver(lv_PlayerIndex, c_gameOverDefeat, true, true);
+            }
+            auto0C395880_g = gv_MiceGroup; 
+            auto0C395880_p = 1;
+            for ( ; auto0C395880_p <= PlayerGroupCount(auto0C395880_g) ; auto0C395880_p += BoolToInt(lv_PlayerIndex == PlayerGroupPlayer(auto0C395880_g, auto0C395880_p)) ) {
+                lv_PlayerIndex = PlayerGroupPlayer(auto0C395880_g, auto0C395880_p);
+                GameOver(lv_PlayerIndex, c_gameOverVictory, true, true);
+            }
+        }
+
+    }
+    else if (auto41F11478_val == "Probe") {
+        gv_PlayerStatus[lv_PlayerIndex] -= 1;
+        gv_MouseNumber -= 1;
+        if ((UnitGroupHasUnit(gv_mouseUnitGroup, EventUnit()) == true)) {
+            UnitGroupRemove(gv_mouseUnitGroup, EventUnit());
+            if ((gv_PlayerStatus[lv_PlayerIndex] > 0)) {
+                UnitGroupAdd(gv_mouseUnitGroup, UnitGroupRandomUnit(UnitGroup("Probe", lv_PlayerIndex, RegionEntireMap(), UnitFilter(0, 0, (1 << c_targetFilterMissile), (1 << (c_targetFilterDead - 32)) | (1 << (c_targetFilterHidden - 32))), 0), c_unitCountAlive));
+            }
+
+        }
+
+        if ((gv_PlayerStatus[lv_PlayerIndex] == 0)) {
+            UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/FB4505A0") + PlayerName(lv_PlayerIndex) + StringExternal("Param/Value/03D5460C") + PlayerName(libNtve_gf_KillingPlayer()) + StringExternal("Param/Value/90DFCB3B")));
+            auto8E0C2289_g = UnitGroup(null, UnitGetOwner(EventUnit()), RegionEntireMap(), UnitFilter(0, 0, 0, 0), 0);
+            auto8E0C2289_u = 1;
+            for ( ; auto8E0C2289_u <= UnitGroupCount(auto8E0C2289_g, c_unitCountAll) ; auto8E0C2289_u += BoolToInt(lv_Unit == UnitGroupUnit(auto8E0C2289_g, auto8E0C2289_u)) ) {
+                lv_Unit = UnitGroupUnit(auto8E0C2289_g, auto8E0C2289_u);
+                UnitKill(lv_Unit);
+            }
+            UnitCreate(1, "SpacePrisonerBig", 0, UnitGetOwner(EventUnit()), PointFromId(14), 270.0);
+            libNtve_gf_MakeUnitInvulnerable(UnitLastCreated(), true);
+            libNtve_gf_PauseUnit(UnitLastCreated(), true);
+            SoundPlayForPlayer(SoundLink("Probe_Pissed", -1), c_maxPlayers, PlayerGroupAll(), 100.0, 0.0);
+        }
+
+        if ((gv_MouseNumber == 0)) {
+            autoAFE175E3_g = gv_CatGroup; 
+            autoAFE175E3_p = 1;
+            for ( ; autoAFE175E3_p <= PlayerGroupCount(autoAFE175E3_g) ; autoAFE175E3_p += BoolToInt(lv_PlayerIndex == PlayerGroupPlayer(autoAFE175E3_g, autoAFE175E3_p)) ) {
+                lv_PlayerIndex = PlayerGroupPlayer(autoAFE175E3_g, autoAFE175E3_p);
+                GameOver(lv_PlayerIndex, c_gameOverVictory, true, true);
+            }
+            autoA2BD9324_g = gv_MiceGroup; 
+            autoA2BD9324_p = 1;
+            for ( ; autoA2BD9324_p <= PlayerGroupCount(autoA2BD9324_g) ; autoA2BD9324_p += BoolToInt(lv_PlayerIndex == PlayerGroupPlayer(autoA2BD9324_g, autoA2BD9324_p)) ) {
+                lv_PlayerIndex = PlayerGroupPlayer(autoA2BD9324_g, autoA2BD9324_p);
+                GameOver(lv_PlayerIndex, c_gameOverDefeat, true, true);
+            }
+        }
+
+    }
+    else {
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_UnitKilled_Init () {
+    gt_UnitKilled = TriggerCreate("gt_UnitKilled_Func");
+    TriggerEnable(gt_UnitKilled, false);
+    TriggerAddEventUnitDied(gt_UnitKilled, null);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: MiceRevive
+//--------------------------------------------------------------------------------------------------
+bool gt_RescueMouse_Func (bool testConds, bool runActions) {
+    unitgroup autoEB4F829C_g;
+    int autoEB4F829C_u;
+    playergroup autoA81C4504_g;
+    int autoA81C4504_p;
+
+    // Variable Declarations
+    unit lv_Unit;
+    int lv_Player;
+
+    // Variable Initialization
+
+    // Conditions
+    if (testConds) {
+        if (!((UnitGetType(EventUnit()) == "Probe"))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    autoEB4F829C_g = UnitGroup("SpacePrisonerBig", c_playerAny, RegionFromId(1), UnitFilter(0, 0, 0, 0), 0);
+    autoEB4F829C_u = 1;
+    for ( ; autoEB4F829C_u <= UnitGroupCount(autoEB4F829C_g, c_unitCountAll) ; autoEB4F829C_u += BoolToInt(lv_Unit == UnitGroupUnit(autoEB4F829C_g, autoEB4F829C_u)) ) {
+        lv_Unit = UnitGroupUnit(autoEB4F829C_g, autoEB4F829C_u);
+        UnitRemove(lv_Unit);
+    }
+    autoA81C4504_g = gv_MiceGroup; 
+    autoA81C4504_p = 1;
+    for ( ; autoA81C4504_p <= PlayerGroupCount(autoA81C4504_g) ; autoA81C4504_p += BoolToInt(lv_Player == PlayerGroupPlayer(autoA81C4504_g, autoA81C4504_p)) ) {
+        lv_Player = PlayerGroupPlayer(autoA81C4504_g, autoA81C4504_p);
+        if ((gv_PlayerStatus[lv_Player] <= 0)) {
+            gv_PlayerStatus[lv_Player] = 1;
+            gv_MouseNumber += 1;
+            UnitCreate(1, "Probe", 0, lv_Player, PointFromId(14), 270.0);
+            UnitGroupAdd(gv_mouseUnitGroup, UnitLastCreated());
+            UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/1CDA19E0") + StringExternal("Param/Value/3B64394F") + PlayerName(lv_Player) + StringExternal("Param/Value/F1817276") + StringExternal("Param/Value/3A7CB9FC")));
+        }
+
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_RescueMouse_Init () {
+    gt_RescueMouse = TriggerCreate("gt_RescueMouse_Func");
+    TriggerEnable(gt_RescueMouse, false);
+    TriggerAddEventUnitRangePoint(gt_RescueMouse, null, PointFromId(14), 2.0, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: MiceTrain
+//--------------------------------------------------------------------------------------------------
+bool gt_MouseBuilt_Func (bool testConds, bool runActions) {
+    // Variable Declarations
+    int lv_PlayerIndex;
+
+    // Variable Initialization
+    lv_PlayerIndex = UnitGetOwner(EventUnit());
+
+    // Conditions
+    if (testConds) {
+        if (!((UnitGetType(EventUnitCreatedUnit()) == "Probe"))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    gv_PlayerStatus[lv_PlayerIndex] += 1;
+    gv_MouseNumber += 1;
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_MouseBuilt_Init () {
+    gt_MouseBuilt = TriggerCreate("gt_MouseBuilt_Func");
+    TriggerAddEventUnitCreated(gt_MouseBuilt, null, "NexusTrain", null);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: CatTrain
+//--------------------------------------------------------------------------------------------------
+bool gt_CatBuilt_Func (bool testConds, bool runActions) {
+    // Variable Declarations
+    int lv_PlayerIndex;
+
+    // Variable Initialization
+    lv_PlayerIndex = UnitGetOwner(EventUnit());
+
+    // Conditions
+    if (testConds) {
+        if (!((UnitGetType(EventUnitCreatedUnit()) == "PrimalUltralisk"))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    gv_PlayerStatus[lv_PlayerIndex] += 1;
+    gv_CatNumber += 1;
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_CatBuilt_Init () {
+    gt_CatBuilt = TriggerCreate("gt_CatBuilt_Func");
+    TriggerAddEventUnitCreated(gt_CatBuilt, null, "CatAdvanceUnits", null);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: CatIncome
+//--------------------------------------------------------------------------------------------------
+bool gt_CatIncome_Func (bool testConds, bool runActions) {
+    playergroup autoCAC2F2D0_g;
+    int autoCAC2F2D0_p;
+
+    // Variable Declarations
+    int lv_Player;
+
+    // Variable Initialization
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    autoCAC2F2D0_g = gv_CatGroup; 
+    autoCAC2F2D0_p = 1;
+    for ( ; autoCAC2F2D0_p <= PlayerGroupCount(autoCAC2F2D0_g) ; autoCAC2F2D0_p += BoolToInt(lv_Player == PlayerGroupPlayer(autoCAC2F2D0_g, autoCAC2F2D0_p)) ) {
+        lv_Player = PlayerGroupPlayer(autoCAC2F2D0_g, autoCAC2F2D0_p);
+        PlayerModifyPropertyInt(lv_Player, c_playerPropMinerals, c_playerPropOperAdd, gv_Income);
+    }
+    gv_IncomeTime += 5;
+    if ((gv_IncomeTime == 300)) {
+        if ((gv_Income < 128)) {
+            gv_Income *= 2;
+            UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/CCC7E167") + (IntToText(gv_Income) + StringExternal("Param/Value/F38D2DCE"))));
+        }
+
+        gv_IncomeTime = 0;
+    }
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_CatIncome_Init () {
+    gt_CatIncome = TriggerCreate("gt_CatIncome_Func");
+    TriggerEnable(gt_CatIncome, false);
+    TriggerAddEventTimePeriodic(gt_CatIncome, 5.0, c_timeGame);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: PlayerLeftAfterStart
+//--------------------------------------------------------------------------------------------------
+bool gt_InGameChecking_Func (bool testConds, bool runActions) {
+    unitgroup auto30CD3B2C_g;
+    int auto30CD3B2C_u;
+
+    // Variable Declarations
+    int lv_Player;
+    unit lv_Unit;
+
+    // Variable Initialization
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/B9F131FF") + StringExternal("Param/Value/61811AB1") + PlayerName(EventPlayer()) + StringExternal("Param/Value/FD558EF0") + StringExternal("Param/Value/C2B9CBC8")));
+    if ((PlayerGroupHasPlayer(gv_CatGroup, EventPlayer()) == true)) {
+        PlayerGroupRemove(gv_CatGroup, EventPlayer());
+    }
+
+    if ((PlayerGroupHasPlayer(gv_MiceGroup, EventPlayer()) == true)) {
+        PlayerGroupRemove(gv_MiceGroup, EventPlayer());
+    }
+
+    auto30CD3B2C_g = UnitGroup(null, EventPlayer(), RegionFromId(1), UnitFilter(0, 0, 0, 0), 0);
+    auto30CD3B2C_u = 1;
+    for ( ; auto30CD3B2C_u <= UnitGroupCount(auto30CD3B2C_g, c_unitCountAll) ; auto30CD3B2C_u += BoolToInt(lv_Unit == UnitGroupUnit(auto30CD3B2C_g, auto30CD3B2C_u)) ) {
+        lv_Unit = UnitGroupUnit(auto30CD3B2C_g, auto30CD3B2C_u);
+        UnitKill(lv_Unit);
+    }
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_InGameChecking_Init () {
+    gt_InGameChecking = TriggerCreate("gt_InGameChecking_Func");
+    TriggerEnable(gt_InGameChecking, false);
+    TriggerAddEventPlayerLeft(gt_InGameChecking, c_playerAny, c_gameResultUndecided);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: WestToEast
+//--------------------------------------------------------------------------------------------------
+bool gt_WestToEast_Func (bool testConds, bool runActions) {
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UnitSetPosition(EventUnit(), PointFromId(1159043209), false);
+    UnitIssueOrder(EventUnit(), Order(AbilityCommand("stop", 0)), c_orderQueueReplace);
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_WestToEast_Init () {
+    gt_WestToEast = TriggerCreate("gt_WestToEast_Func");
+    TriggerAddEventUnitRange(gt_WestToEast, null, UnitFromId(887494390), 2.0, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: EastToWest
+//--------------------------------------------------------------------------------------------------
+bool gt_EastToWest_Func (bool testConds, bool runActions) {
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UnitSetPosition(EventUnit(), PointFromId(293793475), false);
+    UnitIssueOrder(EventUnit(), Order(AbilityCommand("stop", 0)), c_orderQueueReplace);
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_EastToWest_Init () {
+    gt_EastToWest = TriggerCreate("gt_EastToWest_Func");
+    TriggerAddEventUnitRange(gt_EastToWest, null, UnitFromId(1586133730), 2.0, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: NorthToSouth
+//--------------------------------------------------------------------------------------------------
+bool gt_NorthToSouth_Func (bool testConds, bool runActions) {
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UnitSetPosition(EventUnit(), PointFromId(117591079), false);
+    UnitIssueOrder(EventUnit(), Order(AbilityCommand("stop", 0)), c_orderQueueReplace);
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_NorthToSouth_Init () {
+    gt_NorthToSouth = TriggerCreate("gt_NorthToSouth_Func");
+    TriggerAddEventUnitRange(gt_NorthToSouth, null, UnitFromId(585405274), 2.0, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: SouthToNorth
+//--------------------------------------------------------------------------------------------------
+bool gt_SouthToNorth_Func (bool testConds, bool runActions) {
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UnitSetPosition(EventUnit(), PointFromId(338758709), false);
+    UnitIssueOrder(EventUnit(), Order(AbilityCommand("stop", 0)), c_orderQueueReplace);
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_SouthToNorth_Init () {
+    gt_SouthToNorth = TriggerCreate("gt_SouthToNorth_Func");
+    TriggerAddEventUnitRange(gt_SouthToNorth, null, UnitFromId(681653940), 2.0, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: ShopClicked
+//--------------------------------------------------------------------------------------------------
+bool gt_ShopClicked_Func (bool testConds, bool runActions) {
+    int auto4E451755_val;
+
+    // Variable Declarations
+    int lv_player;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UnitSelect(UnitFromId(1690155136), lv_player, false);
+    auto4E451755_val = lv_player;
+    if (auto4E451755_val == 1) {
+        UnitSelect(UnitFromId(791521423), lv_player, true);
+    }
+    else if (auto4E451755_val == 2) {
+        UnitSelect(UnitFromId(316124513), lv_player, true);
+    }
+    else if (auto4E451755_val == 3) {
+        UnitSelect(UnitFromId(1476396956), lv_player, true);
+    }
+    else if (auto4E451755_val == 4) {
+        UnitSelect(UnitFromId(1128864413), lv_player, true);
+    }
+    else if (auto4E451755_val == 5) {
+        UnitSelect(UnitFromId(1444895892), lv_player, true);
+    }
+    else if (auto4E451755_val == 6) {
+        UnitSelect(UnitFromId(919097394), lv_player, true);
+    }
+    else if (auto4E451755_val == 7) {
+        UnitSelect(UnitFromId(623288384), lv_player, true);
+    }
+    else if (auto4E451755_val == 8) {
+        UnitSelect(UnitFromId(675722489), lv_player, true);
+    }
+    else {
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_ShopClicked_Init () {
+    gt_ShopClicked = TriggerCreate("gt_ShopClicked_Func");
+    TriggerAddEventUnitSelected(gt_ShopClicked, UnitRefFromUnit(UnitFromId(1690155136)), c_playerAny, true);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop1Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop1Train_Func (bool testConds, bool runActions) {
+    unitgroup autoC71408B0_g;
+    int autoC71408B0_u;
+    unitgroup auto1D2FF040_g;
+    int auto1D2FF040_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        autoC71408B0_g = gv_catUnitGroup;
+        autoC71408B0_u = 1;
+        for ( ; autoC71408B0_u <= UnitGroupCount(autoC71408B0_g, c_unitCountAll) ; autoC71408B0_u += BoolToInt(lv_unit == UnitGroupUnit(autoC71408B0_g, autoC71408B0_u)) ) {
+            lv_unit = UnitGroupUnit(autoC71408B0_g, autoC71408B0_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        auto1D2FF040_g = gv_mouseUnitGroup;
+        auto1D2FF040_u = 1;
+        for ( ; auto1D2FF040_u <= UnitGroupCount(auto1D2FF040_g, c_unitCountAll) ; auto1D2FF040_u += BoolToInt(lv_unit == UnitGroupUnit(auto1D2FF040_g, auto1D2FF040_u)) ) {
+            lv_unit = UnitGroupUnit(auto1D2FF040_g, auto1D2FF040_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop1Train_Init () {
+    gt_Shop1Train = TriggerCreate("gt_Shop1Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop1Train, UnitRefFromUnit(UnitFromId(791521423)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop2Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop2Train_Func (bool testConds, bool runActions) {
+    unitgroup auto9ECD3D5A_g;
+    int auto9ECD3D5A_u;
+    unitgroup autoB8E2AF35_g;
+    int autoB8E2AF35_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        auto9ECD3D5A_g = gv_catUnitGroup;
+        auto9ECD3D5A_u = 1;
+        for ( ; auto9ECD3D5A_u <= UnitGroupCount(auto9ECD3D5A_g, c_unitCountAll) ; auto9ECD3D5A_u += BoolToInt(lv_unit == UnitGroupUnit(auto9ECD3D5A_g, auto9ECD3D5A_u)) ) {
+            lv_unit = UnitGroupUnit(auto9ECD3D5A_g, auto9ECD3D5A_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        autoB8E2AF35_g = gv_mouseUnitGroup;
+        autoB8E2AF35_u = 1;
+        for ( ; autoB8E2AF35_u <= UnitGroupCount(autoB8E2AF35_g, c_unitCountAll) ; autoB8E2AF35_u += BoolToInt(lv_unit == UnitGroupUnit(autoB8E2AF35_g, autoB8E2AF35_u)) ) {
+            lv_unit = UnitGroupUnit(autoB8E2AF35_g, autoB8E2AF35_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop2Train_Init () {
+    gt_Shop2Train = TriggerCreate("gt_Shop2Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop2Train, UnitRefFromUnit(UnitFromId(316124513)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop3Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop3Train_Func (bool testConds, bool runActions) {
+    unitgroup autoBE45B953_g;
+    int autoBE45B953_u;
+    unitgroup autoFB3235A1_g;
+    int autoFB3235A1_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        autoBE45B953_g = gv_catUnitGroup;
+        autoBE45B953_u = 1;
+        for ( ; autoBE45B953_u <= UnitGroupCount(autoBE45B953_g, c_unitCountAll) ; autoBE45B953_u += BoolToInt(lv_unit == UnitGroupUnit(autoBE45B953_g, autoBE45B953_u)) ) {
+            lv_unit = UnitGroupUnit(autoBE45B953_g, autoBE45B953_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        autoFB3235A1_g = gv_mouseUnitGroup;
+        autoFB3235A1_u = 1;
+        for ( ; autoFB3235A1_u <= UnitGroupCount(autoFB3235A1_g, c_unitCountAll) ; autoFB3235A1_u += BoolToInt(lv_unit == UnitGroupUnit(autoFB3235A1_g, autoFB3235A1_u)) ) {
+            lv_unit = UnitGroupUnit(autoFB3235A1_g, autoFB3235A1_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop3Train_Init () {
+    gt_Shop3Train = TriggerCreate("gt_Shop3Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop3Train, UnitRefFromUnit(UnitFromId(1476396956)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop4Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop4Train_Func (bool testConds, bool runActions) {
+    unitgroup autoA86112F2_g;
+    int autoA86112F2_u;
+    unitgroup autoFF051F45_g;
+    int autoFF051F45_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        autoA86112F2_g = gv_catUnitGroup;
+        autoA86112F2_u = 1;
+        for ( ; autoA86112F2_u <= UnitGroupCount(autoA86112F2_g, c_unitCountAll) ; autoA86112F2_u += BoolToInt(lv_unit == UnitGroupUnit(autoA86112F2_g, autoA86112F2_u)) ) {
+            lv_unit = UnitGroupUnit(autoA86112F2_g, autoA86112F2_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        autoFF051F45_g = gv_mouseUnitGroup;
+        autoFF051F45_u = 1;
+        for ( ; autoFF051F45_u <= UnitGroupCount(autoFF051F45_g, c_unitCountAll) ; autoFF051F45_u += BoolToInt(lv_unit == UnitGroupUnit(autoFF051F45_g, autoFF051F45_u)) ) {
+            lv_unit = UnitGroupUnit(autoFF051F45_g, autoFF051F45_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop4Train_Init () {
+    gt_Shop4Train = TriggerCreate("gt_Shop4Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop4Train, UnitRefFromUnit(UnitFromId(1128864413)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop5Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop5Train_Func (bool testConds, bool runActions) {
+    unitgroup auto1EB22234_g;
+    int auto1EB22234_u;
+    unitgroup autoD65F954C_g;
+    int autoD65F954C_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        auto1EB22234_g = gv_catUnitGroup;
+        auto1EB22234_u = 1;
+        for ( ; auto1EB22234_u <= UnitGroupCount(auto1EB22234_g, c_unitCountAll) ; auto1EB22234_u += BoolToInt(lv_unit == UnitGroupUnit(auto1EB22234_g, auto1EB22234_u)) ) {
+            lv_unit = UnitGroupUnit(auto1EB22234_g, auto1EB22234_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        autoD65F954C_g = gv_mouseUnitGroup;
+        autoD65F954C_u = 1;
+        for ( ; autoD65F954C_u <= UnitGroupCount(autoD65F954C_g, c_unitCountAll) ; autoD65F954C_u += BoolToInt(lv_unit == UnitGroupUnit(autoD65F954C_g, autoD65F954C_u)) ) {
+            lv_unit = UnitGroupUnit(autoD65F954C_g, autoD65F954C_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop5Train_Init () {
+    gt_Shop5Train = TriggerCreate("gt_Shop5Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop5Train, UnitRefFromUnit(UnitFromId(1444895892)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop6Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop6Train_Func (bool testConds, bool runActions) {
+    unitgroup auto1DDF7D5B_g;
+    int auto1DDF7D5B_u;
+    unitgroup autoEDCB9712_g;
+    int autoEDCB9712_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        auto1DDF7D5B_g = gv_catUnitGroup;
+        auto1DDF7D5B_u = 1;
+        for ( ; auto1DDF7D5B_u <= UnitGroupCount(auto1DDF7D5B_g, c_unitCountAll) ; auto1DDF7D5B_u += BoolToInt(lv_unit == UnitGroupUnit(auto1DDF7D5B_g, auto1DDF7D5B_u)) ) {
+            lv_unit = UnitGroupUnit(auto1DDF7D5B_g, auto1DDF7D5B_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        autoEDCB9712_g = gv_mouseUnitGroup;
+        autoEDCB9712_u = 1;
+        for ( ; autoEDCB9712_u <= UnitGroupCount(autoEDCB9712_g, c_unitCountAll) ; autoEDCB9712_u += BoolToInt(lv_unit == UnitGroupUnit(autoEDCB9712_g, autoEDCB9712_u)) ) {
+            lv_unit = UnitGroupUnit(autoEDCB9712_g, autoEDCB9712_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop6Train_Init () {
+    gt_Shop6Train = TriggerCreate("gt_Shop6Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop6Train, UnitRefFromUnit(UnitFromId(919097394)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop7Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop7Train_Func (bool testConds, bool runActions) {
+    unitgroup autoE97E75F5_g;
+    int autoE97E75F5_u;
+    unitgroup autoBD4E9758_g;
+    int autoBD4E9758_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        autoE97E75F5_g = gv_catUnitGroup;
+        autoE97E75F5_u = 1;
+        for ( ; autoE97E75F5_u <= UnitGroupCount(autoE97E75F5_g, c_unitCountAll) ; autoE97E75F5_u += BoolToInt(lv_unit == UnitGroupUnit(autoE97E75F5_g, autoE97E75F5_u)) ) {
+            lv_unit = UnitGroupUnit(autoE97E75F5_g, autoE97E75F5_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        autoBD4E9758_g = gv_mouseUnitGroup;
+        autoBD4E9758_u = 1;
+        for ( ; autoBD4E9758_u <= UnitGroupCount(autoBD4E9758_g, c_unitCountAll) ; autoBD4E9758_u += BoolToInt(lv_unit == UnitGroupUnit(autoBD4E9758_g, autoBD4E9758_u)) ) {
+            lv_unit = UnitGroupUnit(autoBD4E9758_g, autoBD4E9758_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop7Train_Init () {
+    gt_Shop7Train = TriggerCreate("gt_Shop7Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop7Train, UnitRefFromUnit(UnitFromId(623288384)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: Shop8Train
+//--------------------------------------------------------------------------------------------------
+bool gt_Shop8Train_Func (bool testConds, bool runActions) {
+    unitgroup auto2C715743_g;
+    int auto2C715743_u;
+    unitgroup auto449FC06F_g;
+    int auto449FC06F_u;
+
+    // Variable Declarations
+    int lv_player;
+    unit lv_unitTrain;
+    unit lv_unit;
+
+    // Variable Initialization
+    lv_player = EventPlayer();
+    lv_unitTrain = EventUnitProgressUnit();
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    if ((PlayerGroupHasPlayer(gv_CatGroup, lv_player) == true)) {
+        auto2C715743_g = gv_catUnitGroup;
+        auto2C715743_u = 1;
+        for ( ; auto2C715743_u <= UnitGroupCount(auto2C715743_g, c_unitCountAll) ; auto2C715743_u += BoolToInt(lv_unit == UnitGroupUnit(auto2C715743_g, auto2C715743_u)) ) {
+            lv_unit = UnitGroupUnit(auto2C715743_g, auto2C715743_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if ((PlayerGroupHasPlayer(gv_MiceGroup, lv_player) == true)) {
+        auto449FC06F_g = gv_mouseUnitGroup;
+        auto449FC06F_u = 1;
+        for ( ; auto449FC06F_u <= UnitGroupCount(auto449FC06F_g, c_unitCountAll) ; auto449FC06F_u += BoolToInt(lv_unit == UnitGroupUnit(auto449FC06F_g, auto449FC06F_u)) ) {
+            lv_unit = UnitGroupUnit(auto449FC06F_g, auto449FC06F_u);
+            if ((UnitGetOwner(lv_unit) == lv_player)) {
+                UnitSetPosition(lv_unitTrain, UnitGetPosition(lv_unit), true);
+                break;
+            }
+
+        }
+    }
+    else if (true) {
+        UnitSetPosition(lv_unitTrain, PointFromId(14), true);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_Shop8Train_Init () {
+    gt_Shop8Train = TriggerCreate("gt_Shop8Train_Func");
+    TriggerAddEventUnitTrainProgress(gt_Shop8Train, UnitRefFromUnit(UnitFromId(675722489)), c_unitProgressStageComplete);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: help
+//--------------------------------------------------------------------------------------------------
+bool gt_help_Func (bool testConds, bool runActions) {
+    // Conditions
+    if (testConds) {
+        if (!(((StringCompare(StringWord(EventChatMessage(false), 1), "-help", c_stringCase) == 0)))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UIDisplayMessage(PlayerGroupSingle(EventPlayer()), c_messageAreaChat, StringExternal("Param/Value/E70BD3A7"));
+    UIDisplayMessage(PlayerGroupSingle(EventPlayer()), c_messageAreaChat, StringExternal("Param/Value/262A47CA"));
+    UIDisplayMessage(PlayerGroupSingle(EventPlayer()), c_messageAreaChat, StringExternal("Param/Value/AB656648"));
+    UIDisplayMessage(PlayerGroupSingle(EventPlayer()), c_messageAreaChat, StringExternal("Param/Value/D272B308"));
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_help_Init () {
+    gt_help = TriggerCreate("gt_help_Func");
+    TriggerAddEventChatMessage(gt_help, c_playerAny, "-help", false);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: players
+//--------------------------------------------------------------------------------------------------
+bool gt_players_Func (bool testConds, bool runActions) {
+    // Conditions
+    if (testConds) {
+        if (!(((StringCompare(StringWord(EventChatMessage(false), 1), "-players", c_stringCase) == 0)))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    PlayerGroupLoopBegin(PlayerGroupActive());
+    for ( ; !PlayerGroupLoopDone() ; PlayerGroupLoopStep() ) {
+        UIDisplayMessage(PlayerGroupSingle(EventPlayer()), c_messageAreaChat, (StringExternal("Param/Value/BC4736E3") + IntToText(PlayerGroupLoopCurrent()) + StringExternal("Param/Value/B794884B") + PlayerName(PlayerGroupLoopCurrent()) + StringExternal("Param/Value/57032F77")));
+    }
+    PlayerGroupLoopEnd();
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_players_Init () {
+    gt_players = TriggerCreate("gt_players_Func");
+    TriggerAddEventChatMessage(gt_players, c_playerAny, "-players", false);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: player
+//--------------------------------------------------------------------------------------------------
+bool gt_player_Func (bool testConds, bool runActions) {
+    // Conditions
+    if (testConds) {
+        if (!(((StringCompare(StringWord(EventChatMessage(false), 1), "-player", c_stringCase) == 0) && ((StringToInt(StringWord(EventChatMessage(false), 2)) >= 1) && (StringToInt(StringWord(EventChatMessage(false), 2)) <= 8))))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    UIDisplayMessage(PlayerGroupSingle(EventPlayer()), c_messageAreaChat, (StringExternal("Param/Value/C5B87BBF") + IntToText(StringToInt(StringWord(EventChatMessage(false), 2))) + StringExternal("Param/Value/7B54AF5A") + PlayerName(StringToInt(StringWord(EventChatMessage(false), 2))) + StringExternal("Param/Value/2E0B71EE")));
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_player_Init () {
+    gt_player = TriggerCreate("gt_player_Func");
+    TriggerAddEventChatMessage(gt_player, c_playerAny, "-player", false);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: kick
+//--------------------------------------------------------------------------------------------------
+bool gt_kick_Func (bool testConds, bool runActions) {
+    // Variable Declarations
+    int lv_sum;
+
+    // Variable Initialization
+
+    // Conditions
+    if (testConds) {
+        if (!(((gv_votelock == false) && (StringCompare(StringWord(EventChatMessage(false), 1), "-kick", c_stringCase) == 0) && ((StringToInt(StringWord(EventChatMessage(false), 2)) >= 1) && (StringToInt(StringWord(EventChatMessage(false), 2)) <= 8)) && (EventPlayer() == StringToInt(StringWord(EventChatMessage(false), 2))) && (PlayerGroupHasPlayer(PlayerGroupAlliance(c_playerGroupAlly, EventPlayer()), StringToInt(StringWord(EventChatMessage(false), 2))) == true)))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    gv_votelock = true;
+    UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, (StringExternal("Param/Value/4875D7E8") + PlayerName(EventPlayer()) + StringExternal("Param/Value/B2D2B54B") + PlayerName(StringToInt(StringWord(EventChatMessage(false), 2))) + StringExternal("Param/Value/DA8BCF1E")));
+    IntLoopBegin(1, 10);
+    for ( ; !IntLoopDone() ; IntLoopStep() ) {
+        gv_votes[IntLoopCurrent()] = 0;
+    }
+    IntLoopEnd();
+    TriggerEnable(gt_yes, true);
+    TriggerEnable(gt_no, true);
+    Wait(15.0, c_timeReal);
+    TriggerEnable(gt_yes, false);
+    TriggerEnable(gt_no, false);
+    IntLoopBegin(1, 10);
+    for ( ; !IntLoopDone() ; IntLoopStep() ) {
+        lv_sum += gv_votes[IntLoopCurrent()];
+    }
+    IntLoopEnd();
+    if ((lv_sum > 0)) {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/AE420E12"));
+        KickFromGame(PlayerGroupSingle(StringToInt(StringWord(EventChatMessage(false), 2))));
+    }
+    else {
+        UIDisplayMessage(PlayerGroupAll(), c_messageAreaChat, StringExternal("Param/Value/9330F4C4"));
+    }
+    gv_votelock = false;
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_kick_Init () {
+    gt_kick = TriggerCreate("gt_kick_Func");
+    TriggerAddEventChatMessage(gt_kick, c_playerAny, "-kick", false);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: yes
+//--------------------------------------------------------------------------------------------------
+bool gt_yes_Func (bool testConds, bool runActions) {
+    // Conditions
+    if (testConds) {
+        if (!((StringCompare(StringWord(EventChatMessage(false), 1), "-yes", c_stringCase) == 0))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    gv_votes[EventPlayer()] = 1;
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_yes_Init () {
+    gt_yes = TriggerCreate("gt_yes_Func");
+    TriggerEnable(gt_yes, false);
+    TriggerAddEventChatMessage(gt_yes, c_playerAny, "-yes", false);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger: no
+//--------------------------------------------------------------------------------------------------
+bool gt_no_Func (bool testConds, bool runActions) {
+    // Conditions
+    if (testConds) {
+        if (!((StringCompare(StringWord(EventChatMessage(false), 1), "-no", c_stringCase) == 0))) {
+            return false;
+        }
+    }
+
+    // Actions
+    if (!runActions) {
+        return true;
+    }
+
+    gv_votes[EventPlayer()] = -1;
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+void gt_no_Init () {
+    gt_no = TriggerCreate("gt_no_Func");
+    TriggerEnable(gt_no, false);
+    TriggerAddEventChatMessage(gt_no, c_playerAny, "-no", false);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Trigger Initialization
+//--------------------------------------------------------------------------------------------------
+void InitTriggers () {
+    gt_MapInitialization_Init();
+    gt_PlayerChooseMouse_Init();
+    gt_PlayerChooseCat_Init();
+    gt_SelectionTimer_Init();
+    gt_ReleaseCats_Init();
+    gt_SelectionChecking_Init();
+    gt_UnitKilled_Init();
+    gt_RescueMouse_Init();
+    gt_MouseBuilt_Init();
+    gt_CatBuilt_Init();
+    gt_CatIncome_Init();
+    gt_InGameChecking_Init();
+    gt_WestToEast_Init();
+    gt_EastToWest_Init();
+    gt_NorthToSouth_Init();
+    gt_SouthToNorth_Init();
+    gt_ShopClicked_Init();
+    gt_Shop1Train_Init();
+    gt_Shop2Train_Init();
+    gt_Shop3Train_Init();
+    gt_Shop4Train_Init();
+    gt_Shop5Train_Init();
+    gt_Shop6Train_Init();
+    gt_Shop7Train_Init();
+    gt_Shop8Train_Init();
+    gt_help_Init();
+    gt_players_Init();
+    gt_player_Init();
+    gt_kick_Init();
+    gt_yes_Init();
+    gt_no_Init();
+}
+
+//--------------------------------------------------------------------------------------------------
+// Map Initialization
+//--------------------------------------------------------------------------------------------------
+void InitMap () {
+    InitLibs();
+    InitGlobals();
+    InitTriggers();
+}
